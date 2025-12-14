@@ -1,44 +1,17 @@
-// mobile_app/lib/models/payment_model.dart (Дополнение)
+# 🌐 aythena-smart-city-mobility-agent: Программируемая Система Городской Мобильности (PUMA)
 
-// ... (PaymentMethod, TransactionStatus, AuthStatus, CardDetails, TransactionResponse - остаются прежними) ...
+Этот репозиторий содержит код мобильного клиента (Flutter) и архитектуру бэкенда (Mock) для создания саморегулирующегося хаба городской мобильности. Фокус — на интеграции данных о спросе, мультимодальной оптимизации маршрутов и автономном управлении поездками.
 
-enum TokenType { ephemeral, multiUse, recurring }
-enum RiskLevel { low, medium, high, fraud }
-enum AuthenticationRequirement { none, biometric, pin, threeDSecure } // SCA требования
+## Архитектура
+* **Frontend:** Flutter/Dart (Riverpod, Real-Time Map, Complex State Management for Trip Agent)
+* **Backend:** Python/Flask Mock (Demand Prediction Engine, Routing Algorithm, Unified Payment Gateway)
 
-// Обновленная модель токена
-class PaymentToken {
-  final String tokenId;
-  final String maskedPan;
-  final DateTime expiration;
-  final String cardId;
-  final TokenType type; // Новый тип
+## 🔑 Ключевые принципы
+1.  **Predictive Mobility:** Система не реагирует на спрос, а предсказывает его, динамически управляя тарифами и размещением транспорта.
+2.  **True Multimodality:** Роутинг учитывает стоимость и ETA для каждого сегмента пути (пешком, каршеринг, метро) как единый оптимизационный процесс.
+3.  **Trip Autonomy:** Агент поездки берет на себя управление в реальном времени (например, автоматически вызывает такси, если автобус задерживается).
+4.  **Unified Wallet:** Все транзакции проводятся через единый, токенизированный платежный кошелек (Mobility Tokens).
 
-  PaymentToken({
-    required this.tokenId, required this.maskedPan, required this.expiration, 
-    required this.cardId, this.type = TokenType.ephemeral // По умолчанию одноразовый
-  });
-}
+---
 
-// Обновленная модель запроса транзакции
-class TransactionRequest {
-  final String merchantId;
-  final double amount;
-  final String currency;
-  final String processingToken;
-  final String userDeviceId;  // Идентификатор устройства для Risk Scoring
-  final RiskLevel riskScore;  // Оценка риска, приложенная к запросу
-
-  TransactionRequest({
-    // ... (предыдущие поля) ...
-    required this.userDeviceId, required this.riskScore
-  });
-}
-
-// Модель для запроса 3DS/SCA
-class SCARequest {
-  final AuthenticationRequirement requirement;
-  final String? challengeUrl; // URL для 3DS-экрана, если требуется
-
-  SCARequest({required this.requirement, this.challengeUrl});
-}
+## 📂 Структура проекта
