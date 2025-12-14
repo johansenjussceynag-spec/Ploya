@@ -1,17 +1,44 @@
-# 🔒 aythena-secure-pay-gateway: Беспроводная Платежная Система (Токенизация и NFC/BLE)
+// mobile_app/lib/models/payment_model.dart (Дополнение)
 
-Этот репозиторий содержит код для разработки мобильного клиента (Flutter) и архитектуру бэкенда (Mock) для безопасных беспроводных платежей. Главный фокус — на безопасности данных через токенизацию и быстрой, надежной обработке транзакций.
+// ... (PaymentMethod, TransactionStatus, AuthStatus, CardDetails, TransactionResponse - остаются прежними) ...
 
-## Архитектура
-* **Frontend:** Flutter/Dart (Riverpod, Bluetooth/NFC integration hooks, Biometric Auth)
-* **Backend:** Python/Flask Mock (Tokenization Engine, Payment Gateway Mock, Merchant API)
+enum TokenType { ephemeral, multiUse, recurring }
+enum RiskLevel { low, medium, high, fraud }
+enum AuthenticationRequirement { none, biometric, pin, threeDSecure } // SCA требования
 
-## 🔑 Ключевые принципы
-1.  **Zero-Knowledge Payment:** Платежный терминал никогда не получает реальный номер карты (PAN).
-2.  **Ephemeral Token Use:** Использование одноразовых токенов для каждой транзакции для минимизации риска перехвата.
-3.  **Multi-Factor Auth (Pre-Auth):** Требование биометрической или PIN-аутентификации для активации платежного токена.
-4.  **Transaction Lifecycle Management:** Четкое управление статусами транзакции от инициации до авторизации.
+// Обновленная модель токена
+class PaymentToken {
+  final String tokenId;
+  final String maskedPan;
+  final DateTime expiration;
+  final String cardId;
+  final TokenType type; // Новый тип
 
----
+  PaymentToken({
+    required this.tokenId, required this.maskedPan, required this.expiration, 
+    required this.cardId, this.type = TokenType.ephemeral // По умолчанию одноразовый
+  });
+}
 
-## 📂 Структура проекта
+// Обновленная модель запроса транзакции
+class TransactionRequest {
+  final String merchantId;
+  final double amount;
+  final String currency;
+  final String processingToken;
+  final String userDeviceId;  // Идентификатор устройства для Risk Scoring
+  final RiskLevel riskScore;  // Оценка риска, приложенная к запросу
+
+  TransactionRequest({
+    // ... (предыдущие поля) ...
+    required this.userDeviceId, required this.riskScore
+  });
+}
+
+// Модель для запроса 3DS/SCA
+class SCARequest {
+  final AuthenticationRequirement requirement;
+  final String? challengeUrl; // URL для 3DS-экрана, если требуется
+
+  SCARequest({required this.requirement, this.challengeUrl});
+}
