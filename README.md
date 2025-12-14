@@ -1,76 +1,17 @@
-// mobile_app/lib/models/food_model.dart (Дополнение)
+# 🚀 aythena-skill-boost-platform: Платформа для Прокачки Игровых и Реальных Навыков
 
-// ... (OrderStatus, RestaurantRules, Restaurant - остаются прежними) ...
+Этот репозиторий содержит код мобильного клиента (Flutter) для геймифицированного обучения и отслеживания прогресса. Ключевая особенность — структурированные треки обучения, система вознаграждений и аналитика реальных данных.
 
-class DishModifier {
-  final String modifierId;
-  final String name;
-  final double priceDelta; // Изменение цены (может быть отрицательным)
-  
-  DishModifier({required this.modifierId, required this.name, this.priceDelta = 0.0});
-}
+## Архитектура
+* **Frontend:** Flutter/Dart (Riverpod, Gamified UI, Real-Time Progress Visualization)
+* **Backend:** Python/Flask Mock (API для треков навыков, ачивок, Токенов и данных Performance API)
 
-class Dish {
-  // ... (id, name, description, price, isAvailable - остаются прежними) ...
-  final List<DishModifier> modifiers;
-  
-  Dish({
-    // ... (предыдущие поля) ...
-    this.modifiers = const [],
-  });
-}
+## 🔑 Ключевые принципы
+1.  **Metric-Driven Progress:** Прогресс определяется не только ручным подтверждением, но и импортом реальных метрик из внешних (игровых) API.
+2.  **Token Economy:** Введение внутренней валюты (Boost Tokens) для покупки премиум-гайдов или визуальных улучшений.
+3.  **Dynamic Difficulty:** Система, адаптирующая задания под текущий уровень пользователя.
+4.  **Gamified Structure:** Четкая иерархия: Навык (Skill) -> Трек (Track) -> Задание (Task).
 
-class CartItem {
-  final Dish dish;
-  final int quantity;
-  final List<DishModifier> selectedModifiers; // Список выбранных модификаторов
-  
-  CartItem({required this.dish, required this.quantity, this.selectedModifiers = const []});
-  
-  // Расчет общей стоимости с учетом модификаторов
-  double get total {
-    final modifierCost = selectedModifiers.fold(0.0, (sum, m) => sum + m.priceDelta);
-    return (dish.price + modifierCost) * quantity;
-  }
-}
+---
 
-class DeliveryDetails {
-  final double baseFee;
-  final double surcharge; // Динамическая наценка за загруженность
-  final double finalFee;
-  final DateTime kitchenReadyTime; // Когда кухня обещает закончить
-  final DateTime deliverySlotStart; // Начало окна доставки
-  final DateTime deliverySlotEnd;   // Конец окна доставки
-
-  DeliveryDetails({
-    required this.baseFee, required this.surcharge, required this.finalFee, 
-    required this.kitchenReadyTime, required this.deliverySlotStart, required this.deliverySlotEnd
-  });
-}
-
-class Order {
-  // ... (orderId, restaurantId, items, deliveryAddress, status - остаются прежними) ...
-  final DeliveryDetails deliveryDetails; // Вся информация о доставке
-  
-  // Общая сумма заказа: (Сумма блюд) + FinalFee
-  double get totalWithDelivery => totalAmount + deliveryDetails.finalFee;
-
-  Order({
-    // ... (предыдущие поля) ...
-    required this.deliveryDetails,
-  });
-}
-
-// Обновление Real-Time статуса
-class DeliveryUpdate {
-  // ... (orderId, status - остаются прежними) ...
-  final double courierLatitude;
-  final double courierLongitude;
-  final Duration courierRouteRemaining; // Оставшееся время до клиента (динамическое)
-  
-  DeliveryUpdate({
-    // ... (предыдущие поля) ...
-    required this.courierLatitude, required this.courierLongitude, 
-    required this.courierRouteRemaining
-  });
-}
+## 📂 Структура проекта
